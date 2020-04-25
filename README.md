@@ -172,6 +172,12 @@ As you may have already noticed, I had experimented with DAT protocol as well. A
 
 However, the above architecture outlined above should not be drastically different for other protocols. The code idea of content addressable units of data remains same.
 
+
+Below screenshot shows the poor number of peers I get from India.
+
+![](./doc/images/ipfs-peers.png)
+
+
 ## What next
 
 Wikipedia is big. The concepts I explained in content architecture address only a subset of the content. There are users, non-article content. There are interactive(JS based) content. There are talk pages and so on. We need a content architecture to accommodate all of them. If we are able to map every REST API output of wikipedia to corresponding data source in IPFS, building a reading application is more close.
