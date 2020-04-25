@@ -18,9 +18,9 @@ This is basic units of content in wikipedia world. Each revision, once created, 
 
 An article in wikipedia is editable. The latest revision represent the current state of the article. But one can always access its  old revisions at any point. It is desirable to have a human readable name along with IPFS hash id for each article.
 
-### Every wikipedia(English Wikipedia, Spanish Wikipedia, Tamil Wikipedia) having an object in decentralized web with addresses of its articles.
+### Every wikipedia having an object in decentralized web with addresses of its articles.
 
-A wikipedia is a collection of articles(But not limited to). So a wikipedia like English Wikipedia is kind of a registry with listing of all its articles.
+A wikipedia is a collection of articles(But not limited to). So a wikipedia like English Wikipedia is kind of a registry with listing of all its articles. (*In case you are wondering why I mention each wikipedia when there is a single wikipedia - You may not know this, but there are wikipedia in nearly 300 languages. English Wikipedia, Spanish Wikipedia, Tamil Wikipedia are examples*)
 
 ### A Wikipedia reading web application that can live in a decentralized web.
 
@@ -67,6 +67,118 @@ In the past, I(Santhosh) had attempted to build a static web application that ca
 
 ## How to add Wikipedia content to IPFS
 
+I wrote a nodejs application that uploads the content to IPFS based on the content architecture outlined above. Each wikipedia has thousands of articles with millions of revisions corresponding to each edit. Instead of iterating through every wiki and every article, this application is listening the edit [event stream][9] - an event that is emitted when an edit happened. We also whitelist a small set of small wikis to listen for this events. Our application is not at all capable of processing all those millions of edits happening in all wikis all the time.
+
+To add files to IPFS, we need an IPFS gateway, specifically a *writable* gateway. I used the [go-ipfs][11] and ran the IPFS daemon:
+
+```bash
+$ ipfs daemon --writable
+Initializing daemon...
+go-ipfs version: 0.4.23-
+Repo version: 7
+System version: amd64/linux
+Golang version: go1.13.7
+Swarm listening on /ip4/127.0.0.1/tcp/4001
+Swarm listening on /ip4/172.17.0.1/tcp/4001
+Swarm listening on /ip4/192.168.31.222/tcp/4001
+Swarm listening on /ip6/::1/tcp/4001
+Swarm listening on /p2p-circuit
+Swarm announcing /ip4/127.0.0.1/tcp/4001
+Swarm announcing /ip4/172.17.0.1/tcp/4001
+Swarm announcing /ip4/192.168.31.222/tcp/4001
+Swarm announcing /ip4/49.37.206.204/tcp/4001
+Swarm announcing /ip6/::1/tcp/4001
+API server listening on /ip4/127.0.0.1/tcp/5001
+WebUI: http://127.0.0.1:5001/webui
+Gateway (writable) server listening on /ip4/127.0.0.1/tcp/8082
+Daemon is ready
+```
+
+There is a javascript implementation of of IPFS known as [JS-IPFS][10], and you can write nodejs applications using that. But my initial attempt to use that faced so many issues and I decided to run IPFS daemon using [GO-IPFS][11] and use its web API. In our case the API is listening at `localhost:5001`. You may refer the HTTP api documentation. But, there is a [js http client][13] library that abstract all these API calls and gives a similar api of JS-IPFS. We use that in this project.
+
+After running the daemon, we can run our code to add content. Before that install the dependencies using
+
+```npm install```
+
+And edit `config.json` file to whitelist the wikis we want to listen.
+
+We need to create keys to publish wikis to permanent address(IPNS). For that use:
+
+```
+$ ipfs key gen --type=rsa --size=2048 ml.wikipedia.org.key
+```
+
+Repeat this for all the wikis we whitelisted. Make sure the key name is given correctly in `config.json`
+
+Then start the program.
+
+```
+$ npm start
+```
+
+I have whitelisted Malayalam and Tamil wikis. A sample output looks like this:
+
+```
+> wikipedia-ipfs@ start /home/santhosh/work/exp/ipfs
+> node src/index.js
+
+Connected to IPFS server at http://127.0.0.1:5001
+┌─────────┬───────────────┐
+│ (index) │    Values     │
+├─────────┼───────────────┤
+│ version │   '0.4.23'    │
+│ commit  │      ''       │
+│  repo   │      '7'      │
+│ system  │ 'amd64/linux' │
+│ golang  │  'go1.13.7'   │
+└─────────┴───────────────┘
+Connecting to EventStreams at https://stream.wikimedia.org/v2/stream/recentchange
+--- Opened connection.
+--- Watcher initialized for mlwiki.
+[Rev ] /freeknowledge/revision/3317531 : Qmb3xocfwrerXHZ7mo6T6qSHNN4JeWLRy2ZQ5mfQiixKES
+[Rev ] /freeknowledge/revision/3317522 : QmbUMDRfrxCVcGFrupFxWiLBce7texEHwAnGgnke14zPFR
+[Page] /mlwiki/page/രവി വള്ളത്തോൾ : QmTkS28xfdLkJ9nQeUCGLf5GLsm7a9YLLQLk9LBr39ungs
+Published mlwiki at https://gateway.ipfs.io/ipns/QmS3kbdWDixvThKjcyprjrwNR5PmBGAaZmGQxgPRqGiKcX
+Published mlwiki at https://gateway.ipfs.io/ipfs/QmaFaZM5xqXoUHA4dnQ4u77osZCd5M7fdvqcNvew1Gj4c6
+Published mlwiki at https://gateway.ipfs.io/ipfs/QmaFaZM5xqXoUHA4dnQ4u77osZCd5M7fdvqcNvew1Gj4c6
+[Rev ] /freeknowledge/revision/3317532 : QmbjYwToYdirFtskpePVpqjoRoie7oVTsm3kUqQ7jMHXwv
+[Rev ] /freeknowledge/revision/3317531 : QmRtmHBdekZeEw2GLpkHMMRGHj9CrcwSCj8vWg2z6hpAXP
+[Page] /mlwiki/page/രവി വള്ളത്തോൾ : Qma34PBvsqfZzAquegME7QbgEW3tJY7Bsy9vRM6Wwsn8eG
+Published mlwiki at https://gateway.ipfs.io/ipns/QmS3kbdWDixvThKjcyprjrwNR5PmBGAaZmGQxgPRqGiKcX
+Published mlwiki at https://gateway.ipfs.io/ipfs/QmPr4Pmv2L43wSGMHP8NRsTPUVcHRknBhasAAaCbLVbo9A
+--- Watcher initialized for tawiki.
+[Page] /tawiki/page/கும்மாயம் : QmZbcrsSnRqc6rVZtezQyn3g9rWxDjyVDhWMNgGA668VBe
+Published tawiki at https://gateway.ipfs.io/ipns/QmQiYSbDXcrnLgWFmt3A7ZpejxPSEay9Wn7Y1CAQmjd34Q
+Published tawiki at https://gateway.ipfs.io/ipfs/QmWib52CZRS7z9BphGQxeY1Mbrq4Ujo5KxkFYo2ZSJ914H
+```
+
+You can open https://gateway.ipfs.io/ipns/QmS3kbdWDixvThKjcyprjrwNR5PmBGAaZmGQxgPRqGiKcX in your browser and see the content of the article we just added
+
+![](./doc/images/ipfs-wikipedia-article-ml-sample.png)
+
+The `latest` file there has the content `Qmb3xocfwrerXHZ7mo6T6qSHNN4JeWLRy2ZQ5mfQiixKES` which points to the latest revision of the article. You can open that CID using https://gateway.ipfs.io/ipfs/Qmb3xocfwrerXHZ7mo6T6qSHNN4JeWLRy2ZQ5mfQiixKES
+
+![](./doc/images/ipfs-wikipedia-article-ml-sample-2.png)
+
+And opening the `content.html` there gives the article:
+
+![](./doc/images/ipfs-wikipedia-article-ml-sample-3.png)
+
+You can observe a few more things in the about program output. The article was edited 2 times while we were running the program. The article [രവി വള്ളത്തോൾ][14] got two revisions 3317531 and 3317532. You can see that it was published with 2 different CID of mlwiki.
+
+1. `/ipfs/QmaFaZM5xqXoUHA4dnQ4u77osZCd5M7fdvqcNvew1Gj4c6/page/രവി വള്ളത്തോൾ`
+2. `/ipfs/QmPr4Pmv2L43wSGMHP8NRsTPUVcHRknBhasAAaCbLVbo9A/page/രവി വള്ളത്തോൾ`
+
+But we published it with a private key and got permanent address:
+`/ipns/QmS3kbdWDixvThKjcyprjrwNR5PmBGAaZmGQxgPRqGiKcX/page/രവി വള്ളത്തോൾ`. This will always point to the latest revision of the article.
+
+## What next
+
+Wikipedia is big. The concepts I explained in content architecture address only a subset of the content. There are users, non-article content. There are interactive(JS based) content. There are talk pages and so on. We need a content architecture to accommodate all of them. If we are able to map every REST API output of wikipedia to corresponding data source in IPFS, building a reading application is more close.
+
+There are so many problems to solve: The content has links that need to be rewritten. The images need to be stored and addressed. I don't know how to implement a powerful search in IPFS content. More importantly, how to edit this content? resolve conflicts? They are not impossible anyway.
+
+Wikipedia users share the sum of free knowledge. They create the content collaboratively and share it. Can they share the infrastructure also? If reading a wikipedia page means having a copy of the content in the node in a decentralized web, I think it will be faster and cheaper to run wikipedia.
 
 ## Note
 
@@ -80,3 +192,11 @@ Even though the author is an Engineer at Wikimedia foundation, this is not an of
 [6]: https://docs.ipfs.io/guides/concepts/dnslink/
 [7]: https://wikipedia.thottingal.in
 [8]: https://wikipedia.hashbase.io
+[9]: https://wikitech.wikimedia.org/wiki/Event_Platform/EventStreams
+[10]: https://js.ipfs.io/
+[11]: https://github.com/ipfs/go-ipfs
+[12]: https://docs-beta.ipfs.io/reference/http/api/#getting-started
+[13]: https://github.com/ipfs/js-ipfs/tree/master/packages/ipfs-http-client
+[14]: https://ml.wikipedia.org/wiki/രവി_വള്ളത്തോൾ
+
+
