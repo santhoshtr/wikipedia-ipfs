@@ -41,7 +41,7 @@ class Page {
   async update() {
     this.summary = this.summary || (await this.getSummary()) || {};
     await this.ipfs.files.write(
-      `/${this.wiki.name}/page/${this.title}/revisions`,
+      `/${this.wiki.name}/page/${this.title}/revisions.json`,
       Buffer.from(JSON.stringify(this.revisions)),
       { parents: true, create: true }
     );
@@ -57,7 +57,7 @@ class Page {
       );
     }
     await this.ipfs.files.write(
-      `/${this.wiki.name}/page/${this.title}/summary`,
+      `/${this.wiki.name}/page/${this.title}/summary.json`,
       Buffer.from(JSON.stringify(this.summary)),
       { parents: true, create: true }
     );

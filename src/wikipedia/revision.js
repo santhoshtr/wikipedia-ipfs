@@ -39,13 +39,13 @@ class Revision {
     this.content = await this.getContent();
 
     await this.ipfs.files.write(
-      `/freeknowledge/revision/${this.revision}/metadata`,
+      `/freeknowledge/revision/${this.revision}/metadata.json`,
       Buffer.from(JSON.stringify(this.metadata)),
       { parents: true, create: true }
     );
     await this.ipfs.files.write(
-      `/freeknowledge/revision/${this.revision}/content`,
-      Buffer.from(JSON.stringify(this.content)),
+      `/freeknowledge/revision/${this.revision}/content.html`,
+      Buffer.from(this.content),
       { parents: true, create: true }
     );
 

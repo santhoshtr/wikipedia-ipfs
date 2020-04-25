@@ -39,11 +39,14 @@ async function publish(wiki) {
   const cid = await ipfs.files.flush(`/wikipedia`);
   const publishResponse = await ipfs.name.publish(cid.toString(), {
     key: config.publishkey.wikipedia,
+    resolve: false,
   });
   console.log(
-    `Published at https://gateway.ipfs.io/ipns/${publishResponse.name}`
+    `Published wikipedia at https://gateway.ipfs.io/ipns/${publishResponse.name}`
   );
-  console.log(`Published at https://gateway.ipfs.io${publishResponse.value}`);
+  console.log(
+    `Published wikipedia at https://gateway.ipfs.io${publishResponse.value}`
+  );
 }
 
 async function start() {

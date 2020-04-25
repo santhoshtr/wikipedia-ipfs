@@ -8,14 +8,17 @@ class Wiki {
   }
 
   async publish() {
-    const cid = await ipfs.files.flush(`/${this.name}`);
-    const publishResponse = await ipfs.name.publish(cid.toString(), {
-      key: config.publishkey[this.name],
+    const cid = await this.ipfs.files.flush(`/${this.name}`);
+    const publishResponse = await this.ipfs.name.publish(cid.toString(), {
+      key: this.config.publishkey[this.name],
+      resolve: false,
     });
     console.log(
-      `Published at https://gateway.ipfs.io/ipns/${publishResponse.name}`
+      `Published ${this.name} at https://gateway.ipfs.io/ipns/${publishResponse.name}`
     );
-    console.log(`Published at https://gateway.ipfs.io${publishResponse.value}`);
+    console.log(
+      `Published ${this.name} at https://gateway.ipfs.io${publishResponse.value}`
+    );
     if (!this.ipns) {
       await this.link(publishResponse.name);
     }

@@ -1,6 +1,6 @@
 {
     "ipfs_server": "http://127.0.0.1:5001",
-    "ipfs_publishkey": {
+    "publishkey": {
         "wikipedia": "wikipedia.org.key",
         "mlwiki": "ml.wikipedia.org.key",
         "tawiki": "ta.wikipedia.org.key"
