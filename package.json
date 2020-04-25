@@ -4,7 +4,7 @@
   "main": "src/index.js",
   "private": true,
   "scripts": {
-    "start": "nodejs src/index.js"
+    "start": "node src/index.js"
   },
   "author": "Santhosh Thottingal<santhosh.thottingal@gmail.com>",
   "license": "MIT",
