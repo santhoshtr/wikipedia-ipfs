@@ -190,10 +190,10 @@ Wikipedia users share the sum of free knowledge. They create the content collabo
 
 Even though the author is an Engineer at Wikimedia foundation, this is not an official Wikimedia foundation project.
 
-[1]: ipfs.io/
-[2]: datproject.org
+[1]: https://ipfs.io/
+[2]: https://datproject.org
 [3]: https://ipfs.io/blog/24-uncensorable-wikipedia/
-[4]: beakerbrowser.com/
+[4]: https://beakerbrowser.com/
 [5]: https://docs.ipfs.io/guides/concepts/ipns/
 [6]: https://docs.ipfs.io/guides/concepts/dnslink/
 [7]: https://wikipedia.thottingal.in
