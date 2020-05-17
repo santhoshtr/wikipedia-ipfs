@@ -1,0 +1,30 @@
+{
+  "name": "wikipedia-ipfs-publisher",
+  "description": "Publish wikipedia content to ipfs by listening to pubsub",
+  "main": "src/index.js",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "node src/index.js"
+  },
+  "author": "Santhosh Thottingal<santhosh.thottingal@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "ipfs-http-client": "^44.0.1",
+    "it-last": "^1.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^7.0.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
+    "prettier": "^2.0.5"
+  },
+  "eslintConfig": {
+    "extends": [
+      "plugin:prettier/recommended"
+    ],
+    "parserOptions": {
+      "ecmaVersion": 2017
+    }
+  }
+}
