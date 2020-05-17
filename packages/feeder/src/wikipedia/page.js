@@ -1,6 +1,5 @@
 const axios = require("axios");
 const Revision = require("./revision");
-const chalk = require("chalk");
 
 class Page {
   constructor(title, ipfs, wiki) {
@@ -83,18 +82,22 @@ class Page {
     page.revisions = revisions;
     page.latest = page.revisions[page.revision];
     const talk = await this.getTalkPage();
-    page.talk = await this.ipfs.dag.put(talk, {
-      format: "dag-cbor",
-      hashAlg: "sha2-256",
-    });
-    console.log(
-      `${chalk.gray(page.talk)}\t${this.wiki.name}/talk/${this.title}`
-    );
+    try {
+      page.talk = await this.ipfs.dag.put(talk, {
+        format: "dag-cbor",
+        hashAlg: "sha2-256",
+      });
+      console.log(
+        `${page.talk}\t${this.wiki.name}/talk/${this.title}`
+      );
+    } catch (e) {
+      // Pass. Talk api is unstable
+    }
     const cid = await this.ipfs.dag.put(page, {
       format: "dag-cbor",
       hashAlg: "sha2-256",
     });
-    console.log(`${chalk.green(cid)}\t${this.wiki.name}/${this.title}`);
+    console.log(`${cid}\t${this.wiki.name}/${this.title}`);
     return cid;
   }
 }

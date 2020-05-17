@@ -1,5 +1,4 @@
 const axios = require("axios");
-const chalk = require("chalk");
 class Revision {
   constructor(ipfs, wiki, title) {
     this.ipfs = ipfs;
@@ -37,7 +36,7 @@ class Revision {
     const metadata = await this.getMetadata(revisionNumber);
     const html = await this.getContent(revisionNumber);
     const revision = {
-      revision: metadata.revision,
+      revision: metadata.rev,
       tid: metadata.tid,
       tags: metadata.tags,
       comment: metadata.comment,
@@ -62,7 +61,7 @@ class Revision {
     });
 
     console.log(
-      `${chalk.blue(cid)}\t${this.wiki.name}/${this.title}/${revisionNumber}`
+      `${cid}\t${this.wiki.name}/${this.title}/${revisionNumber}`
     );
     return cid;
   }

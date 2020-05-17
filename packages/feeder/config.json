@@ -1,0 +1,16 @@
+{
+    "wikipedia_eventstream_url": "https://stream.wikimedia.org/v2/stream/recentchange",
+    "wikipedia_watched_wikis": [
+        "mlwiki",
+        "tawiki",
+        "orwiki",
+        "knwiki",
+        "mrwiki",
+        "guwiki",
+        "hiwiki",
+        "tewiki",
+        "pawiki",
+        "bnwiki",
+        "simplewiki"
+    ]
+}
