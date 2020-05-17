@@ -27,7 +27,7 @@ A Wikipedia publisher program can subscribe to these messages and link this to a
 Each item in these IPLD structured can be retrieved using IPFS. For example, to get the html content for the above mentioned article.
 
 ```
-ipfs dag get ipfs dag get bafyreifs7kodvs4qamc2e5fdgzqaganabn5t36pzqgijhiqa3t53az5tg4/revisions/3306691/content/html
+ipfs dag get bafyreifs7kodvs4qamc2e5fdgzqaganabn5t36pzqgijhiqa3t53az5tg4/revisions/3306691/content/html
 ```
 
 The data structure in these nodes are roughly same as the API output from Wikipedia api. But expected to change as a formal schema is defined.
