@@ -19,25 +19,37 @@ If you are not already familiar with the concepts of decentralized web and IPFS,
 
 # Architecture
 
-Let us define how we will define an article about "Apple" in English wikipedia.
 
-![](./doc/images/ipfs-wikipedia-article.png)
+In my previous attempt, I was trying to model everything using files and using "files" feature of IPFS. You may read that approach in README.old.md in this repo. After I published it, many people contacted and me to discuss these concepts. From all those discussions, I found that, it is better to model the content as Linked Data. It gives easier path towards semantic knowledge(a concept I am very much interested). So in this approach, I am using [IPLD][17] - Inter Planetory Linked Data.
 
-As illustrated, a wiki is a directory with pages as subdirectories. But page content is not in this directory structure. The directory **Apple** only has its metadata and list of revisions and pointer to latest revision. In this example, accessing an IPFS object with content id(CID) `QmR1CXVerK91PTSDBXLhZLV9Wfs8zafkMHwriUXj14zGES` gives you the revision object with content.
 
-Why not having each revisions and its content under `Apple` directory? As mentioned above, an article is mutable. It can be edited. A new revision can be added. When such changes happen, the content id(known as hash or CID) of its parent directory changes and this change causes CID of all its parents change. IPFS need to compute the CID of the whole directory `enwiki`. So this data in IPFS need to be designed as mutable file system(MFS). But revisions are immutable. Once a revision is created, it get a CID and thats it. No more change to that is allowed. It becomes a free floating data packet in decentralized network, addressable by its CID. It is relevant only when a registry tracks its address. An untracked revision CID is a deleted revision, it does not correspond to any article.
+![](./doc/images/ipld-wikipedia.png)
 
-Let us look at what a revision contains:
+## Feeder
 
-![](./doc/images/ipfs-wikipedia-revision.png)
+TODO: Add documentation
 
-You may wonder why an article like `Apple` cannot have an independent mutable IPFS object and wiki tracks it by address and not as a file under wiki directory. This is indeed possible, but I chose the idea of titles under wikipedia directory for fast discovery and search for articles by titles. Traversal of articles under a wiki will involve too many IPFS CID resolves in that case.
+See packages/feeder folder in repo
 
-Finally we have the collection of wikipedia editions. We need to track this because that allows cross linking articles in different languages.
+## Publisher
 
-![](./doc/images/ipfs-wikipedia-wikis.png)
+TODO: Add documentation
 
-There are User accounts that are multi-wiki accounts. I think they should be represented similar to Articles. They are mutable objects.
+See packages/publisher folder in repo
+
+## Editor
+
+TODO: Add documentation
+
+## Reader
+
+In the past, I(Santhosh) had attempted to build a static web application that can be hosted in distributed web. I used dat protocol for this and you can see this application in normal web at [wikipedia.thottingal.in][7] and [wikipedia.hashbase.io][8] - a pinning service or directly from dat protocol `dat://aab37b6f74832891e5b2c593fac748df6379d81c0f2b781f713b0dde229a298d/` (this need [Beaker][4] browser).
+
+I have placed this application in IPFS. See https://bafybeibgkplzawivq3w3evxj6uxy2e4uckgy3skyxicll7rxnrpuz6okn4.ipfs.dweb.link/
+
+If you wonder why that does not look like IPFS URL, it is because this application as a Single Page Application with History mode routing, it need to be addressed from a domain or subdomain. So I used the dweb projects subdomain approach to access it. `bafybeibgkplzawivq3w3evxj6uxy2e4uckgy3skyxicll7rxnrpuz6okn4` is base32 encoded form of `QmQvGMPfub4HwD5BxuPQ95skHENw36wrkJisYMQWkgqdkJ`. Alteratively this application can be run from desktop or mobile(it is a Progressive web app). Anyway, some work is required in this front, but there is a proof of concept. It currently uses the wikipedia REST API and need to rewire to take content from decentralized web.
+
+[![](./doc/images/wikivue.png)](https://wikipedia.thottingal.in/page/en/IPFS)
 
 ## Permanent address
 
@@ -49,122 +61,10 @@ So every wikipedia, in addition to its `ipfs/CID` address, there will be an IPNS
 
 The requirement of having a private key and generation of IPNS based on that is helpful for enforcing some authenticity - that this article is indeed published in wikipedia and nobody else can copy, modify and publish an IPFS structure with this IPNS. They can indeed copy, modify and publish, but never can have IPNS owned by wikipedia.
 
-## The reading application
-
-In the past, I(Santhosh) had attempted to build a static web application that can be hosted in distributed web. I used dat protocol for this and you can see this application in normal web at [wikipedia.thottingal.in][7] and [wikipedia.hashbase.io][8] - a pinning service or directly from dat protocol `dat://aab37b6f74832891e5b2c593fac748df6379d81c0f2b781f713b0dde229a298d/` (this need [Beaker][4] browser).
-
-I have placed this application in IPFS. See https://bafybeibgkplzawivq3w3evxj6uxy2e4uckgy3skyxicll7rxnrpuz6okn4.ipfs.dweb.link/
-
-If you wonder why that does not look like IPFS URL, it is because this application as a Single Page Application with History mode routing, it need to be addressed from a domain or subdomain. So I used the dweb projects subdomain approach to access it. `bafybeibgkplzawivq3w3evxj6uxy2e4uckgy3skyxicll7rxnrpuz6okn4` is base32 encoded form of `QmQvGMPfub4HwD5BxuPQ95skHENw36wrkJisYMQWkgqdkJ`. Alteratively this application can be run from desktop or mobile(it is a Progressive web app). Anyway, some work is required in this front, but there is a proof of concept. It currently uses the wikipedia REST API and need to rewire to take content from decentralized web.
-
-[![](./doc/images/wikivue.png)](https://wikipedia.thottingal.in/page/en/IPFS)
 
 ## How to add Wikipedia content to IPFS
 
-I wrote a nodejs application that uploads the content to IPFS based on the content architecture outlined above. Each wikipedia has thousands of articles with millions of revisions corresponding to each edit. Instead of iterating through every wiki and every article, this application is listening the edit [event stream][9] - an event that is emitted when an edit happened. We also whitelist a small set of small wikis to listen for this events. Our application is not at all capable of processing all those millions of edits happening in all wikis all the time.
-
-To add files to IPFS, we need an IPFS gateway, specifically a *writable* gateway. I used the [go-ipfs][11] and ran the IPFS daemon:
-
-```bash
-$ ipfs daemon --writable
-Initializing daemon...
-go-ipfs version: 0.4.23-
-Repo version: 7
-System version: amd64/linux
-Golang version: go1.13.7
-Swarm listening on /ip4/127.0.0.1/tcp/4001
-Swarm listening on /ip4/172.17.0.1/tcp/4001
-Swarm listening on /ip4/192.168.31.222/tcp/4001
-Swarm listening on /ip6/::1/tcp/4001
-Swarm listening on /p2p-circuit
-Swarm announcing /ip4/127.0.0.1/tcp/4001
-Swarm announcing /ip4/172.17.0.1/tcp/4001
-Swarm announcing /ip4/192.168.31.222/tcp/4001
-Swarm announcing /ip4/49.37.206.204/tcp/4001
-Swarm announcing /ip6/::1/tcp/4001
-API server listening on /ip4/127.0.0.1/tcp/5001
-WebUI: http://127.0.0.1:5001/webui
-Gateway (writable) server listening on /ip4/127.0.0.1/tcp/8082
-Daemon is ready
-```
-
-There is a javascript implementation of of IPFS known as [JS-IPFS][10], and you can write nodejs applications using that. But my initial attempt to use that faced so many issues and I decided to run IPFS daemon using [GO-IPFS][11] and use its web API. In our case the API is listening at `localhost:5001`. You may refer the HTTP api documentation. But, there is a [js http client][13] library that abstract all these API calls and gives a similar api of JS-IPFS. We use that in this project.
-
-After running the daemon, we can run our code to add content. Before that install the dependencies using
-
-```npm install```
-
-And edit `config.json` file to whitelist the wikis we want to listen.
-
-We need to create keys to publish wikis to permanent address(IPNS). For that use:
-
-```
-$ ipfs key gen --type=rsa --size=2048 ml.wikipedia.org.key
-```
-
-Repeat this for all the wikis we whitelisted. Make sure the key name is given correctly in `config.json`
-
-Then start the program.
-
-```
-$ npm start
-```
-
-I have whitelisted Malayalam and Tamil wikis. A sample output looks like this:
-
-```
-> wikipedia-ipfs@ start /home/santhosh/work/exp/ipfs
-> node src/index.js
-
-Connected to IPFS server at http://127.0.0.1:5001
-┌─────────┬───────────────┐
-│ (index) │    Values     │
-├─────────┼───────────────┤
-│ version │   '0.4.23'    │
-│ commit  │      ''       │
-│  repo   │      '7'      │
-│ system  │ 'amd64/linux' │
-│ golang  │  'go1.13.7'   │
-└─────────┴───────────────┘
-Connecting to EventStreams at https://stream.wikimedia.org/v2/stream/recentchange
---- Opened connection.
---- Watcher initialized for mlwiki.
-[Rev ] /freeknowledge/revision/3317531 : Qmb3xocfwrerXHZ7mo6T6qSHNN4JeWLRy2ZQ5mfQiixKES
-[Rev ] /freeknowledge/revision/3317522 : QmbUMDRfrxCVcGFrupFxWiLBce7texEHwAnGgnke14zPFR
-[Page] /mlwiki/page/രവി വള്ളത്തോൾ : QmTkS28xfdLkJ9nQeUCGLf5GLsm7a9YLLQLk9LBr39ungs
-Published mlwiki at https://gateway.ipfs.io/ipns/QmS3kbdWDixvThKjcyprjrwNR5PmBGAaZmGQxgPRqGiKcX
-Published mlwiki at https://gateway.ipfs.io/ipfs/QmaFaZM5xqXoUHA4dnQ4u77osZCd5M7fdvqcNvew1Gj4c6
-Published mlwiki at https://gateway.ipfs.io/ipfs/QmaFaZM5xqXoUHA4dnQ4u77osZCd5M7fdvqcNvew1Gj4c6
-[Rev ] /freeknowledge/revision/3317532 : QmbjYwToYdirFtskpePVpqjoRoie7oVTsm3kUqQ7jMHXwv
-[Rev ] /freeknowledge/revision/3317531 : QmRtmHBdekZeEw2GLpkHMMRGHj9CrcwSCj8vWg2z6hpAXP
-[Page] /mlwiki/page/രവി വള്ളത്തോൾ : Qma34PBvsqfZzAquegME7QbgEW3tJY7Bsy9vRM6Wwsn8eG
-Published mlwiki at https://gateway.ipfs.io/ipns/QmS3kbdWDixvThKjcyprjrwNR5PmBGAaZmGQxgPRqGiKcX
-Published mlwiki at https://gateway.ipfs.io/ipfs/QmPr4Pmv2L43wSGMHP8NRsTPUVcHRknBhasAAaCbLVbo9A
---- Watcher initialized for tawiki.
-[Page] /tawiki/page/கும்மாயம் : QmZbcrsSnRqc6rVZtezQyn3g9rWxDjyVDhWMNgGA668VBe
-Published tawiki at https://gateway.ipfs.io/ipns/QmQiYSbDXcrnLgWFmt3A7ZpejxPSEay9Wn7Y1CAQmjd34Q
-Published tawiki at https://gateway.ipfs.io/ipfs/QmWib52CZRS7z9BphGQxeY1Mbrq4Ujo5KxkFYo2ZSJ914H
-```
-
-You can open https://gateway.ipfs.io/ipns/QmS3kbdWDixvThKjcyprjrwNR5PmBGAaZmGQxgPRqGiKcX in your browser and see the content of the article we just added
-
-![](./doc/images/ipfs-wikipedia-article-ml-sample.png)
-
-The `latest` file there has the content `Qmb3xocfwrerXHZ7mo6T6qSHNN4JeWLRy2ZQ5mfQiixKES` which points to the latest revision of the article. You can open that CID using https://gateway.ipfs.io/ipfs/Qmb3xocfwrerXHZ7mo6T6qSHNN4JeWLRy2ZQ5mfQiixKES
-
-![](./doc/images/ipfs-wikipedia-article-ml-sample-2.png)
-
-And opening the `content.html` there gives the article:
-
-![](./doc/images/ipfs-wikipedia-article-ml-sample-3.png)
-
-You can observe a few more things in the about program output. The article was edited 2 times while we were running the program. The article [രവി വള്ളത്തോൾ][14] got two revisions 3317531 and 3317532. You can see that it was published with 2 different CID of mlwiki.
-
-1. `/ipfs/QmaFaZM5xqXoUHA4dnQ4u77osZCd5M7fdvqcNvew1Gj4c6/page/രവി വള്ളത്തോൾ`
-2. `/ipfs/QmPr4Pmv2L43wSGMHP8NRsTPUVcHRknBhasAAaCbLVbo9A/page/രവി വള്ളത്തോൾ`
-
-But we published it with a private key and got permanent address:
-`/ipns/QmS3kbdWDixvThKjcyprjrwNR5PmBGAaZmGQxgPRqGiKcX/page/രവി വള്ളത്തോൾ`. This will always point to the latest revision of the article.
+TODO: Add documentation
 
 ## Why IPFS and not other protocols
 
@@ -206,3 +106,4 @@ Even though the author is an Engineer at Wikimedia foundation, this is not an of
 [14]: https://ml.wikipedia.org/wiki/രവി_വള്ളത്തോൾ
 [15]: https://github.com/ipfs-shipyard/ipfs-companion
 [16]: https://www.publish0x.com/ecosystem-overviews-and-analysis/the-precarious-state-of-ipfs-in-the-year-2020-xmvxeg
+[17]: https://ipld.io/
