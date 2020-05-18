@@ -10,7 +10,7 @@ Based on the articles that were edited recently, all available information about
 
 Revisions are independent immutable DAG nodes and article contains links to these revisions. The `latest` node in an article points to the latest revision.
 
-The following image shows a real article from Malayalam wikipedia published. It has 4 revisions and revisions point to another nodes. The `latest`  points to latest revision.
+The following image shows a real article from Malayalam wikipedia published. It has 4 revisions and revisions point to revision IPLD. The `latest`  points to latest revision.
 
 [![](./doc/images/page-dag.png)](https://explore.ipld.io/#/explore/bafyreie3ib63ljd5ojtzrqwmdeo75rnehby7ugqc7tb2fr2k6t5nintarm)
 
@@ -24,7 +24,7 @@ The created article nodes are independent and they just get added to IPFS networ
 
 A Wikipedia publisher program can subscribe to these messages and link this to a wikipedia tracker.
 
-Each item in these IPLD structured can be retrieved using IPFS. For example, to get the html content for the above mentioned article.
+Each item in these IPLD structure can be retrieved using IPFS. For example, to get the html content for the above mentioned article.
 
 ```
 ipfs dag get bafyreifs7kodvs4qamc2e5fdgzqaganabn5t36pzqgijhiqa3t53az5tg4/revisions/3306691/content/html
