@@ -97,9 +97,9 @@ A reader application resolve the IPNS of Wikipedia IPLD to get current CID or/an
 
 This application should also be hosted in IPFS or available locally in users devices.
 
-In the past, I(Santhosh) had attempted to build a static web application that can be hosted in distributed web. I have placed this application in IPFS. See https://bafybeibgkplzawivq3w3evxj6uxy2e4uckgy3skyxicll7rxnrpuz6okn4.ipfs.dweb.link/
+In the past, I(Santhosh) had attempted to build a static web application that can be hosted in distributed web. I have placed this application in IPFS. See https://bafzbeigwtdcnrxx34bkdfxvcw2vtwibwij3vcrqthahomcajxkcm6ddlka.ipns.dweb.link/
 
-`bafybeibgkplzawivq3w3evxj6uxy2e4uckgy3skyxicll7rxnrpuz6okn4` is base32 encoded form of `QmQvGMPfub4HwD5BxuPQ95skHENw36wrkJisYMQWkgqdkJ`. Alteratively this application can be run from desktop or mobile(it is a Progressive web app). Anyway, some work is required in this front, but there is a proof of concept. It currently uses the wikipedia REST API and need to rewire to take content from distributed web.
+Alteratively this application can be run from desktop or mobile(it is a Progressive web app). Anyway, some work is required in this front, but there is a proof of concept. It currently uses the wikipedia REST API and need to rewire to take content from distributed web.
 
 [![](./doc/images/wikivue.png)](https://wikipedia.thottingal.in/page/en/IPFS)
 
