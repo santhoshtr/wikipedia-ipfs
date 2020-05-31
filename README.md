@@ -141,4 +141,4 @@ While working on this exploration and studing IPLD and [multihash and multiforma
 [16]: https://www.publish0x.com/ecosystem-overviews-and-analysis/the-precarious-state-of-ipfs-in-the-year-2020-xmvxeg
 [17]: https://ipld.io/
 [18]: https://en.wikipedia.org/wiki/SPARQL
-[19]: multiformats.io
+[19]: https://multiformats.io
