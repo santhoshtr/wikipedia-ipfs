@@ -101,6 +101,8 @@ In the past, I(Santhosh) had attempted to build a static web application that ca
 
 Alteratively this application can be run from desktop or mobile(it is a Progressive web app). Anyway, some work is required in this front, but there is a proof of concept. It currently uses the wikipedia REST API and need to rewire to take content from distributed web.
 
+The in browser js-ipfs apis are in active development and not ready for this usecase from my testing. [IPNS resolving is not possible with the latest version](https://github.com/ipfs/js-ipfs/issues/2921)
+
 [![](./doc/images/wikivue.png)](https://wikipedia.thottingal.in/page/en/IPFS)
 
 ## Permanent address
