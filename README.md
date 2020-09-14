@@ -101,6 +101,8 @@ In the past, I(Santhosh) had attempted to build a static web application that ca
 
 Alteratively this application can be run from desktop or mobile(it is a Progressive web app). Anyway, some work is required in this front, but there is a proof of concept. It currently uses the wikipedia REST API and need to rewire to take content from distributed web.
 
+The in browser js-ipfs apis are in active development and not ready for this usecase from my testing. [IPNS resolving is not possible with the latest version](https://github.com/ipfs/js-ipfs/issues/2921)
+
 [![](./doc/images/wikivue.png)](https://wikipedia.thottingal.in/page/en/IPFS)
 
 ## Permanent address
@@ -141,4 +143,4 @@ While working on this exploration and studing IPLD and [multihash and multiforma
 [16]: https://www.publish0x.com/ecosystem-overviews-and-analysis/the-precarious-state-of-ipfs-in-the-year-2020-xmvxeg
 [17]: https://ipld.io/
 [18]: https://en.wikipedia.org/wiki/SPARQL
-[19]: multiformats.io
+[19]: https://multiformats.io
