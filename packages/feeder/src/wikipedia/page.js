@@ -87,9 +87,7 @@ class Page {
         format: "dag-cbor",
         hashAlg: "sha2-256",
       });
-      console.log(
-        `${page.talk}\t${this.wiki.name}/talk/${this.title}`
-      );
+      console.log(`${page.talk}\t${this.wiki.name}/talk/${this.title}`);
     } catch (e) {
       // Pass. Talk api is unstable
     }

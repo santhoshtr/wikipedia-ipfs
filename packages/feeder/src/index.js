@@ -1,7 +1,7 @@
 const EventSource = require("eventsource");
 const WikiChangeWatcher = require("./watcher");
 const IPFS = require("ipfs");
-const config = require("../config.json")
+const config = require("../config.json");
 
 const watchers = {};
 let ipfs;
@@ -18,11 +18,7 @@ async function messageHandler(event) {
 
   let watcher = watchers[change.wiki];
   if (!watcher) {
-    watcher = new WikiChangeWatcher(
-      ipfs,
-      change.wiki,
-      config
-    );
+    watcher = new WikiChangeWatcher(ipfs, change.wiki, config);
     watchers[change.wiki] = watcher;
   }
 
@@ -34,8 +30,8 @@ async function messageHandler(event) {
 }
 
 async function start() {
-  ipfs =  await IPFS.create();
-  const ipfsInfo=await ipfs.version();
+  ipfs = await IPFS.create();
+  const ipfsInfo = await ipfs.version();
   console.debug(`IPFS Version: ${ipfsInfo.version}, Repo:${ipfsInfo.repo}`);
   eventSource = new EventSource(config.wikipedia_eventstream_url);
   eventSource.onopen = (event) => {

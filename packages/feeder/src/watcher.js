@@ -10,22 +10,19 @@ class WikiChangeWatcher {
   }
 
   async onEdit(edit) {
-    this.wiki.domain=edit.server_url;
+    this.wiki.domain = edit.server_url;
     this.busy = true;
     const pageTitle = edit.title;
     try {
       const page = new Page(pageTitle, this.ipfs, this.wiki);
       const pageCID = await page.update();
       const msgTopic = `wikipedia/wiki/${this.wiki.name}/edit`;
-      const message={
+      const message = {
         wiki: this.wiki.name,
         page: pageTitle,
         cid: pageCID.toString(),
-      }
-      await this.ipfs.pubsub.publish(
-        msgTopic,
-        JSON.stringify(message)
-      );
+      };
+      await this.ipfs.pubsub.publish(msgTopic, JSON.stringify(message));
     } catch (err) {
       console.error(err);
     }

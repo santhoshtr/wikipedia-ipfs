@@ -2,7 +2,7 @@ const last = require("it-last");
 const IPFS = require("ipfs-http-client");
 const config = require("../config.json");
 const { CID } = require("ipfs-http-client");
-const axios = require('axios')
+const axios = require("axios");
 
 class WikipediaPublisher {
   constructor(config) {
@@ -31,19 +31,21 @@ class WikipediaPublisher {
   }
 
   async getAllWikis() {
-    const api = 'https://en.wikipedia.org/w/api.php?action=sitematrix&smtype=language&format=json'
-    const sitematrix = await axios.get(api).then((response) => response.data.sitematrix);
+    const api =
+      "https://en.wikipedia.org/w/api.php?action=sitematrix&smtype=language&format=json";
+    const sitematrix = await axios
+      .get(api)
+      .then((response) => response.data.sitematrix);
     let dbnames = [];
     for (let key in sitematrix) {
       const language = sitematrix[key];
       if (Array.isArray(language.site)) {
         for (let i = 0; i < language.site.length; i++) {
           const site = language.site[i];
-          if (!site.closed && site.code==='wiki') {
-            dbnames.push(site.dbname)
+          if (!site.closed && site.code === "wiki") {
+            dbnames.push(site.dbname);
           }
         }
-
       }
     }
     return dbnames;
@@ -123,7 +125,8 @@ class WikipediaPublisher {
   }
 
   /**
-   * @param {string} pageTitle
+   * @param {string} wikiname
+   * @param {string} wikicid
    * @retrun {CID}
    */
   async updateWikipedia(wikiname, wikicid) {
@@ -140,7 +143,6 @@ class WikipediaPublisher {
 
   /**
    * Publish Wikipedia IPNS
-   * @param {string} cid
    */
   async publish() {
     this.publishing = true;
@@ -154,7 +156,7 @@ class WikipediaPublisher {
 }
 
 function main() {
-  const publisher = new WikipediaPublisher(config)
+  const publisher = new WikipediaPublisher(config);
   publisher.init();
 }
 

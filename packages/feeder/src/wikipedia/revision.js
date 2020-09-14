@@ -60,9 +60,7 @@ class Revision {
       hashAlg: "sha2-256",
     });
 
-    console.log(
-      `${cid}\t${this.wiki.name}/${this.title}/${revisionNumber}`
-    );
+    console.log(`${cid}\t${this.wiki.name}/${this.title}/${revisionNumber}`);
     return cid;
   }
 }
