@@ -33,10 +33,16 @@ A sample configuration looks like
 
 ```
 {
-    "ipfs_server": "http://127.0.0.1:5001",
     "publishkey": "QmdiA2dCgyMgGT8PjZxHC6XsUFzc53eZQ2Y8bpmWaSUSLa"
+     "name": "sthottingal",
+     "swarms": [
+        "/ip4/135.181.34.219/tcp/4002/p2p/QmTcmp2pDGGvQys4CErXQhNGu1QTSEVPCL4RemsvnrC1ue"
+    ]
 }
 ```
+
+`name` is the publisher name.
+`swarms` is swarm addresses to connect to. Usually feeder instance addresses.
 
 # Usage
 

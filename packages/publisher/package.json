@@ -11,7 +11,7 @@
   "dependencies": {
     "axios": "^0.20.0",
     "ipfs-http-client": "^47.0.1",
-    "it-last": "^1.0.2"
+    "ipfs": "^0.50.2"
   },
   "devDependencies": {
     "eslint": "^7.0.0",
