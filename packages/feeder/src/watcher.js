@@ -1,5 +1,4 @@
 const { Wiki, Page } = require("./wikipedia");
-const IPFS = require("ipfs");
 
 class WikiChangeWatcher {
   constructor(ipfs, wikiname) {

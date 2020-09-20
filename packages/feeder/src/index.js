@@ -18,7 +18,7 @@ async function messageHandler(event) {
 
   let watcher = watchers[change.wiki];
   if (!watcher) {
-    watcher = new WikiChangeWatcher(ipfs, change.wiki, config);
+    watcher = new WikiChangeWatcher(ipfs, change.wiki);
     watchers[change.wiki] = watcher;
   }
 
@@ -30,7 +30,7 @@ async function messageHandler(event) {
 }
 
 async function start() {
-  ipfs = await IPFS.create();
+  ipfs = await IPFS.create({ EXPERIMENTAL: { ipnsPubsub: true } });
   const ipfsInfo = await ipfs.version();
   console.debug(`IPFS Version: ${ipfsInfo.version}, Repo:${ipfsInfo.repo}`);
   eventSource = new EventSource(config.wikipedia_eventstream_url);
