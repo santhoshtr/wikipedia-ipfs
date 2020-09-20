@@ -2,6 +2,7 @@ const EventSource = require("eventsource");
 const WikiChangeWatcher = require("./watcher");
 const IPFS = require("ipfs");
 const config = require("../config.json");
+const Repo = require("ipfs-repo");
 
 const watchers = {};
 let ipfs;
@@ -30,7 +31,11 @@ async function messageHandler(event) {
 }
 
 async function start() {
-  ipfs = await IPFS.create({ EXPERIMENTAL: { ipnsPubsub: true } });
+  const repoPath = config.repo;
+  ipfs = await IPFS.create({
+    repo: new Repo(repoPath),
+    EXPERIMENTAL: { ipnsPubsub: true },
+  });
   const ipfsInfo = await ipfs.version();
   console.debug(`IPFS Version: ${ipfsInfo.version}, Repo:${ipfsInfo.repo}`);
   eventSource = new EventSource(config.wikipedia_eventstream_url);

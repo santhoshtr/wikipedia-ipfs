@@ -12,5 +12,6 @@
         "pawiki",
         "bnwiki",
         "simplewiki"
-    ]
+    ],
+    "repo": "data/ipfs-wikipedia-feeder"
 }

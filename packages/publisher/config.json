@@ -1,7 +1,9 @@
 {
-    "publishkey": "self",
+    "publishkey": "wikipedia-publish",
     "name": "sthottingal",
     "swarms": [
         "/ip4/135.181.34.219/tcp/4002/p2p/QmTcmp2pDGGvQys4CErXQhNGu1QTSEVPCL4RemsvnrC1ue"
-    ]
+    ],
+    "repo": "data/ipfs-wikipedia-publisher"
+
 }

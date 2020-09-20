@@ -2,6 +2,7 @@ const last = require("it-last");
 const IPFS = require("ipfs");
 const config = require("../config.json");
 const axios = require("axios");
+const Repo = require("ipfs-repo");
 
 const CID = require("cids");
 class WikipediaPublisher {
@@ -17,7 +18,10 @@ class WikipediaPublisher {
   }
 
   async init() {
-    this.ipfs = await IPFS.create({ EXPERIMENTAL: { ipnsPubsub: true } });
+    this.ipfs = await IPFS.create({
+      repo: new Repo(this.config.repo),
+      EXPERIMENTAL: { ipnsPubsub: true },
+    });
     const { id } = await this.ipfs.id();
     console.log(`IPFS is ready with node id: ${id}`);
     for (let i = 0; i < this.swarms.length; i++) {
