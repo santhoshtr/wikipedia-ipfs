@@ -9,7 +9,7 @@
   "author": "Santhosh Thottingal<santhosh.thottingal@gmail.com>",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.20.0",
+    "axios": "^0.21.2",
     "ipfs-http-client": "^47.0.1",
     "ipfs": "^0.50.2"
   },
