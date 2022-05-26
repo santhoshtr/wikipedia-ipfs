@@ -10,7 +10,7 @@
   "license": "MIT",
   "dependencies": {
     "axios": "^0.21.2",
-    "eventsource": "^1.0.7",
+    "eventsource": "^2.0.2",
     "ipfs": "^0.50.2"
   },
   "devDependencies": {
